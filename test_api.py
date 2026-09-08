@@ -80,7 +80,7 @@ def test_lista_imoveis_especifico_ok(mock_conectar_banco,client):
 
     response = client.get('/imoveis/1')
 
-    assert response.get_code == 200
+    assert response.status_code == 200
     assert response.get_json() == {
                 "id": 1,
                 "logradouro": "Panamby",
@@ -93,7 +93,7 @@ def test_lista_imoveis_especifico_ok(mock_conectar_banco,client):
                 "data_aquisicao": "2026-09-08",
             }
 
-    mock_cur.execute.assert_called_once_with('SELECT id, logradouro, tipo_logradouro, bairro, cidade, cep, tipo, valor, data_aquisicao FROM imoveis WHERE id =?',
+    mock_cur.execute.assert_called_once_with('SELECT id, logradouro, tipo_logradouro, bairro, cidade, cep, tipo, valor, data_aquisicao FROM imoveis WHERE id = ?',
                                              (1,))
 
     mock_cur.fetchone.assert_called_once()
