@@ -166,7 +166,7 @@ def test_adiciona_imovel_erro(mock_conectar_banco,client):
     mock_conectar_banco.assert_not_called()
 
 @patch('api.conectar_banco')
-def test_atualiza_imovel_ok(mock_conectar_banco,client)
+def test_atualiza_imovel_ok(mock_conectar_banco,client):
 
     mock_con = MagicMock()
     mock_cur = MagicMock()
