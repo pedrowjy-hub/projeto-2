@@ -34,7 +34,7 @@ def listar_imoveis():
 def obter_imovel(id):
     conexao = conectar_banco()
     cursor = conexao.cursor()
-    cursor.execute("SELECT id, logradouro, tipo_logradouro, bairro, cidade, cep, tipo, valor, data_aquisicao FROM imoveis WHERE id = ?", (id,))
+    cursor.execute("SELECT id, logradouro, tipo_logradouro, bairro, cidade, cep, tipo, valor, data_aquisicao FROM imoveis WHERE id = %s", (id,))
     resultado = cursor.fetchone()
     conexao.close()
     cursor.close()
@@ -54,7 +54,7 @@ def adiciona_imovel():
     con = conectar_banco()
     cur = con.cursor()
     cur.execute(
-        "INSERT INTO imoveis (logradouro, tipo_logradouro, bairro, cidade, cep, tipo, valor, data_aquisicao) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+        "INSERT INTO imoveis (logradouro, tipo_logradouro, bairro, cidade, cep, tipo, valor, data_aquisicao) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
                 (imovel['logradouro'],imovel['tipo_logradouro'],imovel['bairro'],imovel['cidade'],imovel['cep'],imovel['tipo'],imovel['valor'],imovel['data_aquisicao']),
     )
 
@@ -77,7 +77,7 @@ def update_imovel(id):
 
     con = conectar_banco()
     cur = con.cursor()
-    cur.execute('UPDATE imoveis SET logradouro = ?, tipo_logradouro = ?, bairro = ?, cidade = ?, cep = ?, tipo = ?, valor = ?, data_aquisicao = ? WHERE id = ?',
+    cur.execute('UPDATE imoveis SET logradouro = %s, tipo_logradouro = %s, bairro = %s, cidade = %s, cep = %s, tipo = %s, valor = %s, data_aquisicao = %s WHERE id = %s',
                                              ('Panamby','Avenida','Morumbi','Sao Paulo','01000','apartamento',100000,'2026-09-08',id,))
 
     con.commit()
@@ -91,3 +91,6 @@ def update_imovel(id):
     con.close()
 
     return jsonify({'mensagem':'Imovel atualizado com sucesso'}),200
+
+if __name__ == '__main__':
+    app.run(debug=True)
