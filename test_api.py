@@ -158,7 +158,7 @@ def test_atualiza_imovel_ok(mock_conectar_banco,client)
     assert response.get_json() == {"mensagem": "Imovel atualizada com sucesso"}
 
     mock_cur.execute.assert_called_once_with('UPDATE imoveis SET logradouro = ?, tipo_logradouro = ?, bairro = ?, cidade = ?, cep = ?, tipo = ?, valor = ?, data_aquisicao = ? WHERE id = ?',
-                                             ('Panamby','Avenida','Morumbi','Sao Paulo','01000','apartamento',100000,'2026-09-08'))
+                                             ('Panamby','Avenida','Morumbi','Sao Paulo','01000','apartamento',100000,'2026-09-08',1))
 
     mock_con.commit.assert_called_once()
     mock_cur.close.assert_called_once()
