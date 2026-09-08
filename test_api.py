@@ -165,6 +165,37 @@ def test_adiciona_imovel_erro(mock_conectar_banco,client):
 
     mock_conectar_banco.assert_not_called()
 
+@patch('api.conectar_banco')
+def test_atualiza_imovel_ok(mock_conectar_banco,client)
+
+    mock_con = MagicMock()
+    mock_cur = MagicMock()
+
+    mock_con.cursor.return_value = mock_cur
+
+    mock_conectar_banco.return_value = mock_con
+
+    payload = {     
+                    "logradouro": "Panamby",
+                    "tipo_logradouro": "Avenida",
+                    "bairro": "Morumbi",
+                    "cidade": "Sao Paulo",
+                    "cep": "01000",
+                    "tipo": "apartamento",
+                    "valor": 100000,
+                    "data_aquisicao": "2026-09-08"}
+
+    response = client.put('/imoveis/1', json = payload)
+
+    assert response.status_code == 200
+    assert response.get_json() == {"mensagem": "Imovel atualizada com sucesso"}
+
+    mock_cur.execute.assert_called_once_with('UPDATE imoveis SET logradouro = ?, tipo_logradouro = ?, bairro = ?, cidade = ?, cep = ?, tipo = ?, valor = ?, data_aquisicao = ? WHERE id = ?',
+                                             ('Panamby','Avenida','Morumbi','Sao Paulo','01000','apartamento',100000,'2026-09-08',1))
+
+    mock_con.commit.assert_called_once()
+    mock_cur.close.assert_called_once()
+    mock_con.close.assert_called_once()
 @patch("api.conectar_banco")
 def test_atualizar_contato_not_found(mock_conectar_banco, client):
     mock_conn = MagicMock()
