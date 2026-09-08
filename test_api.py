@@ -122,3 +122,12 @@ def test_listar_imoveis_id_nao_existe(mock_conectar_banco, client):
     mock_cursor.fetchone.assert_called_once()
     mock_cursor.close.assert_called_once()
     mock_conn.close.assert_called_once()
+
+@patch('api.conectar_banco')
+def test_adiciona_imovel_erro(mock_conectar_banco,client):
+    response = client.post('/imoveis',json={'logradouro': 'Panamby'})
+
+    assert response.status_code == 400
+    assert response.get_json() == {"erro": "Campos obrigatórios: logradouro, tipo_logradouro, bairro, cidade, cep, tipo, valor, data_aquisicao"}
+
+    mock_conectar_banco.assert_not_called()
