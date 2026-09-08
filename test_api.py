@@ -63,4 +63,3 @@ def test_listar_imoveis_com_dados(mock_conectar_banco, client):
     mock_cur.fetchall.assert_called_once()
     mock_cur.close.assert_called_once()
     mock_con.close.assert_called_once()
-
