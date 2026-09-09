@@ -235,3 +235,35 @@ def test_atualizar_imovel_erro_validacao(mock_conectar_banco, client):
     assert response.get_json() == {"erro": "Campos obrigatórios: logradouro, tipo_logradouro, bairro, cidade, cep, tipo, valor, data_aquisicao"}
 
     mock_conectar_banco.assert_not_called()
+
+@patch('api.conectar_banco')
+def test_delete_imovel_ok(mock_conectar_banco,client):
+
+    mock_con = MagicMock()
+    mock_cur = MagicMock()
+
+    mock_con.cursor.return_value = mock_cur
+
+    mock_cur.rowcount = 1  
+    mock_conectar_banco.return_value = mock_con
+
+    response = client.delete('/imoveis/1',
+            json = {
+                "logradouro": "Panamby",
+                "tipo_logradouro": "Avenida",
+                "bairro": "Morumbi",
+                "cidade": "Sao Paulo",
+                "cep": "01000",
+                "tipo": "apartamento",
+                "valor": 100000,
+                "data_aquisicao": "2026-09-08"
+            })
+
+    assert response.status_code == 200
+    assert response.get_json() == {"mensagem": "Imovel excluída com sucesso"}
+
+    mock_cur.execute.assert_called_once_with("DELETE FROM imoveis WHERE id = ?",(1,))
+
+    mock_con.commit.assert_called_once()
+    mock_cur.close.assert_called_once()
+    mock_con.close.assert_called_once()
