@@ -57,7 +57,7 @@ def test_listar_imoveis_com_dados(mock_conectar_banco, client):
             "cep": "01000",
             "tipo": "apartamento",
             "valor": 100000,
-            "data_aquisicao": "2026-09-08",
+            "data_aquisicao": "2026-09-08"
         }
     ]
     mock_cur.execute.assert_called_once_with(
@@ -90,7 +90,7 @@ def test_lista_imoveis_especifico_ok(mock_conectar_banco,client):
                 "cep": "01000",
                 "tipo": "apartamento",
                 "valor": 100000,
-                "data_aquisicao": "2026-09-08",
+                "data_aquisicao": "2026-09-08"
             }
 
     mock_cur.execute.assert_called_once_with('SELECT id, logradouro, tipo_logradouro, bairro, cidade, cep, tipo, valor, data_aquisicao FROM imoveis WHERE id = %s',
@@ -141,7 +141,7 @@ def test_adicionar_imovel(mock_conectar_banco, client):
                 "cep": "01000",
                 "tipo": "apartamento",
                 "valor": 100000,
-                "data_aquisicao": "2026-09-08",
+                "data_aquisicao": "2026-09-08"
             }
     response = client.post("/imoveis", json=payload)
 

@@ -78,7 +78,7 @@ def update_imovel(id):
     con = conectar_banco()
     cur = con.cursor()
     cur.execute('UPDATE imoveis SET logradouro = %s, tipo_logradouro = %s, bairro = %s, cidade = %s, cep = %s, tipo = %s, valor = %s, data_aquisicao = %s WHERE id = %s',
-                                             ('Panamby','Avenida','Morumbi','Sao Paulo','01000','apartamento',100000,'2026-09-08',id,))
+                                             (dados['logradouro'],dados['tipo_logradouro'],dados['bairro'],dados['cidade'],dados['cep'],dados['tipo'],dados['valor'],dados['data_aquisicao'],id,))
 
     con.commit()
 
