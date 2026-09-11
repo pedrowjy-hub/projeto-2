@@ -41,7 +41,7 @@ def obter_imovel(id):
     if resultado is None:
         return jsonify({"erro": "Imoveis não encontrado"}), 404
     imoveis = {'id': resultado[0], 'logradouro': resultado[1], 'tipo_logradouro': resultado[2], 'bairro': resultado[3], 'cidade': resultado[4], 'cep': resultado[5], 'tipo': resultado[6], 'valor': resultado[7], 'data_aquisicao': resultado[8]}
-    return imoveis, 200
+    return jsonify(imoveis), 200
 
 @app.route('/imoveis',methods=['POST'])
 def adiciona_imovel():
