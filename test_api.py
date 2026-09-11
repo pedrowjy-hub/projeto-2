@@ -260,7 +260,7 @@ def test_delete_imovel_ok(mock_conectar_banco,client):
             })
 
     assert response.status_code == 200
-    assert response.get_json() == {"mensagem": "Imovel excluída com sucesso"}
+    assert response.get_json() == {"mensagem": 'Imovel excluído com sucesso'}
 
     mock_cur.execute.assert_called_once_with("DELETE FROM imoveis WHERE id = %s",(1,))
 
