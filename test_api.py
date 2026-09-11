@@ -298,7 +298,7 @@ def test_busca_imovel_por_tipo(mock_conectar_banco, client):
 
     mock_conectar_banco.return_value = mock_conn
     mock_cursor.fetchall.return_value = [(1,'Panamby','Avenida','Morumbi','Sao Paulo','01000','apartamento',100000,'2026-09-08')]
-    response = client.get('/imoveis/apartamento')
+    response = client.get('/imoveis/tipo/apartamento')
     assert response.status_code == 200
     assert response.get_json() == [{
                 "id": 1,
@@ -311,9 +311,9 @@ def test_busca_imovel_por_tipo(mock_conectar_banco, client):
                 "valor": 100000,
                 "data_aquisicao": "2026-09-08"
             }]
-    mock_cursor.execute.assert_called_once_with('SELECT id, logradouro, bairro, cidade, cep, tipo, valor, data_aquisicao FROM imoveis WHERE tipo = %s',
+    mock_cursor.execute.assert_called_once_with('SELECT id, logradouro, tipo_logradouro, bairro, cidade, cep, tipo, valor, data_aquisicao FROM imoveis WHERE tipo = %s',
                                                  ('apartamento',))
-    mock_cursor.fetchall()
+    mock_cursor.fetchall.assert_called_once()
     mock_cursor.close.assert_called_once()
     mock_conn.close.assert_called_once()
 
@@ -327,14 +327,14 @@ def test_search_imovel_tipo_erro(mock_conectar_banco,client):
     mock_cur.fetchall.return_value = []
     mock_conectar_banco.return_value = mock_con
 
-    response = client('/imoveis/ola')
+    response = client.get('/imoveis/tipo/ola')
 
     assert response.status_code == 404 
     assert response.get_json() == {
         'erro': 'Nenhum imóvel encontrado para este tipo'
     }
 
-    mock_cur.execute.assert_called_once_with('SELECT id, logradouro, bairro, cidade, cep, tipo, valor, data_aquisicao FROM imoveis WHERE tipo = %s',
+    mock_cur.execute.assert_called_once_with('SELECT id, logradouro, tipo_logradouro, bairro, cidade, cep, tipo, valor, data_aquisicao FROM imoveis WHERE tipo = %s',
                                              ('ola',))
 
     mock_cur.fetchall.assert_called_once()
@@ -350,7 +350,7 @@ def test_busca_imovel_cidade_ok(mock_conectar_banco,client):
     mock_conectar_banco.return_value = mock_conn
     mock_cursor.fetchall.return_value = [(1,'Panamby','Avenida','Morumbi','Sao Paulo','01000','apartamento',100000,'2026-09-08')]
 
-    response = client.get('/imoveis/Sao Paulo')
+    response = client.get('/imoveis/cidade/Sao%20Paulo')
 
     assert response.status_code == 200
     assert response.get_json() == [{
@@ -365,12 +365,14 @@ def test_busca_imovel_cidade_ok(mock_conectar_banco,client):
                 "data_aquisicao": "2026-09-08"
             }]
     
-    mock_cursor.execute.assert_called_once_with('SELECT id, logradouro, bairro, cidade, cep, tipo, valor, data_aquisicao FROM imoveis WHERE cidade = %s',
+    mock_cursor.execute.assert_called_once_with('SELECT id, logradouro, tipo_logradouro, bairro, cidade, cep, tipo, valor, data_aquisicao FROM imoveis WHERE cidade = %s',
                                                     ('Sao Paulo',))
     
-    mock_cursor.fetchall()
+    mock_cursor.fetchall.assert_called_once()
     mock_cursor.close.assert_called_once()
     mock_conn.close.assert_called_once()
+
+@patch('api.conectar_banco')
 def test_busca_imovel_cidade_erro(mock_conectar_banco, client):
     mock_con =  MagicMock()
     mock_cur = MagicMock()
@@ -379,14 +381,14 @@ def test_busca_imovel_cidade_erro(mock_conectar_banco, client):
     mock_cur.fetchall.return_value = []
     mock_conectar_banco.return_value = mock_con
 
-    response = client('/imoveis/ola')
+    response = client.get('/imoveis/cidade/ola')
 
     assert response.status_code == 404 
     assert response.get_json() == {
         'erro': 'Nenhum imóvel encontrado para esta cidade'
     }
 
-    mock_cur.execute.assert_called_once_with('SELECT id, logradouro, bairro, cidade, cep, tipo, valor, data_aquisicao FROM imoveis WHERE cidade = %s',
+    mock_cur.execute.assert_called_once_with('SELECT id, logradouro, tipo_logradouro, bairro, cidade, cep, tipo, valor, data_aquisicao FROM imoveis WHERE cidade = %s',
                                                 ('ola',))
 
     mock_cur.fetchall.assert_called_once()
