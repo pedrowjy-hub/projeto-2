@@ -371,3 +371,24 @@ def test_busca_imovel_cidade_ok(mock_conectar_banco,client):
     mock_cursor.fetchall()
     mock_cursor.close.assert_called_once()
     mock_conn.close.assert_called_once()
+def test_busca_imovel_cidade_erro(mock_conectar_banco, client):
+    mock_con =  MagicMock()
+    mock_cur = MagicMock()
+    mock_con.cursor.return_value = mock_cur
+
+    mock_cur.fetchall.return_value = []
+    mock_conectar_banco.return_value = mock_con
+
+    response = client('/imoveis/ola')
+
+    assert response.status_code == 404 
+    assert response.get_json() == {
+        'erro': 'Nenhum imóvel encontrado para esta cidade'
+    }
+
+    mock_cur.execute.assert_called_once_with('SELECT id, logradouro, bairro, cidade, cep, tipo, valor, data_aquisicao FROM imoveis WHERE cidade = %s',
+                                                ('ola',))
+
+    mock_cur.fetchall.assert_called_once()
+    mock_cur.close.assert_called_once()
+    mock_con.close.assert_called_once()
