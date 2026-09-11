@@ -111,5 +111,31 @@ def delete_imovel(id_imovel):
 
     return jsonify({'mensagem':'Imovel excluído com sucesso'}),200
 
+@app.route('/imoveis/<tipo>',methods=['GET'])
+def busca_imovel_por_tipo(tipo):
+    con = conectar_banco()
+    cur = con.cursor()
+    cur.execute('SELECT id, logradouro, bairro, cidade, cep, tipo, valor, data_aquisicao FROM imoveis WHERE tipo = %s', (tipo,))
+    resultado = con.fetchall()
+    if resultado is None:
+        return jsonify({"erro": "Nenhum imóvel encontrado para este tipo"}), 404
+    resultado = [
+        {
+            'id': imovel[0],
+            'logradouro': imovel[1],
+            'tipo_logradouro': imovel[2],
+            'bairro': imovel[3],
+            'cidade': imovel[4],
+            'cep': imovel[5],
+            'tipo': imovel[6],
+            'valor': imovel[7],
+            'data_aquisicao': imovel[8]
+        }
+        for imovel in cur.fetchall()
+    ]
+    con.close()
+    cur.close()
+    return jsonify(resultado), 200
+
 if __name__ == '__main__':
     app.run(debug=True)
