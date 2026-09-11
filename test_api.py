@@ -283,7 +283,7 @@ def test_delete_imovel_erro(mock_conectar_banco, client):
     assert response.get_json() == {"erro": "Imovel não encontrado"}
 
     mock_cursor.execute.assert_called_once_with(
-        "DELETE FROM imoveis WHERE id = ?",
+        "DELETE FROM imoveis WHERE id = %s",
         (5000,),
     )
     mock_conn.commit.assert_called_once()
