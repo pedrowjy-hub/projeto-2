@@ -310,7 +310,7 @@ def test_busca_imovel_por_tipo(mock_conectar_banco, client):
                 "valor": 100000,
                 "data_aquisicao": "2026-09-08"
             }]
-    mock_cursor.execute.assert_called_once_with('SELECT id, logradouro, bairro, cidade, cep, ttipo, valor, data_aquisicao FROM imoveis WHERE tipo = %s',
+    mock_cursor.execute.assert_called_once_with('SELECT id, logradouro, bairro, cidade, cep, tipo, valor, data_aquisicao FROM imoveis WHERE tipo = %s',
                                                  ('apartamento',))
     mock_cursor.fetchall()
     mock_cursor.close.assert_called_once()
