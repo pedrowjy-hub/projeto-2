@@ -289,3 +289,29 @@ def test_delete_imovel_erro(mock_conectar_banco, client):
     mock_conn.commit.assert_called_once()
     mock_cursor.close.assert_called_once()
     mock_conn.close.assert_called_once()
+
+@patch('api.conectar_banco')
+def test_busca_imovel_por_tipo(mock_conectar_banco, client):
+    mock_conn = MagicMock()
+    mock_cursor = MagicMock()
+    mock_conn.cursor.return_value = mock_cursor
+
+    mock_conectar_banco.return_value = mock_cursor.fetchall.return_value = [(1,'Panamby','Avenida','Morumbi','Sao Paulo','01000','apartamento',100000,'2026-09-08')]
+    response = client.get('/imoveis/apartamento')
+    assert response.status_code == 200
+    assert response.get_json() == [{
+                "id": 1,
+                "logradouro": "Panamby",
+                "tipo_logradouro": "Avenida",
+                "bairro": "Morumbi",
+                "cidade": "Sao Paulo",
+                "cep": "01000",
+                "tipo": "apartamento",
+                "valor": 100000,
+                "data_aquisicao": "2026-09-08"
+            }]
+    mock_cursor.execute.assert_called_once_with('SELECT id, logradouro, bairro, cidade, cep, ttipo, valor, data_aquisicao FROM imoveis WHERE tipo = %s',
+                                                 ('apartamento',))
+    mock_cursor.fetchall()
+    mock_cursor.close.assert_called_once()
+    mock_conn.close.assert_called_once()
