@@ -267,3 +267,25 @@ def test_delete_imovel_ok(mock_conectar_banco,client):
     mock_con.commit.assert_called_once()
     mock_cur.close.assert_called_once()
     mock_con.close.assert_called_once()
+
+@patch('api.conectar_banco')
+def test_delete_imovel_erro(mock_conectar_banco, client):
+    mock_conn = MagicMock()
+    mock_cursor = MagicMock()
+    mock_conn.cursor.return_value = mock_cursor
+
+    mock_cursor.rowcount = 0
+    mock_conectar_banco.return_value = mock_conn
+
+    response = client.delete("/imoveis/5000")
+
+    assert response.status_code == 404
+    assert response.get_json() == {"erro": "Imovel não encontrado"}
+
+    mock_cursor.execute.assert_called_once_with(
+        "DELETE FROM imoveis WHERE id = ?",
+        (5000,),
+    )
+    mock_conn.commit.assert_called_once()
+    mock_cursor.close.assert_called_once()
+    mock_conn.close.assert_called_once()
