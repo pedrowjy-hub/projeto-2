@@ -2,7 +2,7 @@
 
 ## Deploy
 
-A API está disponível em [http://34.224.222.250:5000/].
+A API está disponível em http://34.224.222.250.
 
 ## Rotas
 
